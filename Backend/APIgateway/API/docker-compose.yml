@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  api_gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - USER_SERVICE_URL=http://user_action:8002  # Points to userAction service
+      - ADMIN_SERVICE_URL=http://admin:8001
+    ports:
+      - "8000:8000"
+
+
+    networks:
+      - my_shared_network
+    
+networks:
+  my_shared_network:
+    external: true

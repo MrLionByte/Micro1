@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  useraction_backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: useraction_backend
+    command: python manage.py runserver 0.0.0.0:8001
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgres://user:password@useraction_db:5432/useraction_db
+    depends_on:
+      - useraction_db
+    networks:
+      - useraction_network
+
+  useraction_db:
+    image: postgres:13
+    container_name: useraction_db
+    environment:
+      POSTGRES_DB: useraction_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 0483
+    ports:
+      - "5432:5432"
+    networks:
+      - useraction_network
+
+networks:
+  useraction_network:
+    driver: bridge

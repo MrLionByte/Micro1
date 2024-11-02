@@ -1,0 +1,81 @@
+/* Center the form on the screen */
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f2f5;
+}
+
+/* Main container for the form */
+.form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Style for the form box */
+.form-box {
+    width: 350px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    text-align: center;
+}
+
+.form-box span{
+    color: red;
+    cursor: pointer;
+}
+
+/* Heading and text styles */
+.form-box h4 {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.form-box p {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* Input styles */
+.box form label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    text-align: left;
+    color: #333;
+}
+
+.box form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+/* Button styles */
+.box form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    border: none;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.box form button:hover {
+    background-color: #0056b3;
+}

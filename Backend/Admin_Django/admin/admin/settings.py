@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-h+h1^t&^oy)%g01%r!^7g!+2!mnysaq(r5ay-y6=b&3kiykfo$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'admin.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'admin',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'db',
-        'PORT': '3306',
+        'NAME': "admin",  
+        'USER': "root",
+        'PASSWORD': "root",
+        'HOST': "db",  
+        'PORT': '3306',  
     }
 }
 
@@ -131,3 +131,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+# settings.py
+RABBITMQ_URL = "amqps://tmzwuyef:v8gqvHcDLrJS5RKNzkKvjKSeDlNslbEn@crow.rmq.cloudamqp.com/tmzwuyef"

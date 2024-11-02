@@ -1,0 +1,87 @@
+version: '3.8'
+services:
+  admin_backend:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Django Dockerfile in the same directory as this compose file
+    command: 'python manage.py runserver 0.0.0.0:8000'
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app
+    depends_on:
+      - admin_db
+    networks:
+      - microservices_network
+
+  main_backend:
+    build:
+      context: ../../Main_Flask/main  # Flask app is located in this path relative to docker-compose.yml
+      dockerfile: Dockerfile
+    command: 'flask run --host=0.0.0.0'
+    ports:
+      - 8001:5000
+    volumes:
+      - ../../Main_Flask/main:/app
+    depends_on:
+      - main_db
+    environment:
+      - FLASK_APP=main.py
+      - FLASK_ENV=development
+      - ADMIN_SERVICE_URL=http://admin_backend:8000
+    networks:
+      - microservices_network
+
+  admin_queue:
+    build: 
+      context: .
+      dockerfile: Dockerfile  # Use the Django Dockerfile for the queue service in the Django context
+    command: 'python consumer.py'
+    depends_on:
+      - admin_db
+    networks:
+      - microservices_network
+
+  main_queue:
+    build: 
+      context: ../../Main_Flask/main  # Flask queue service context
+      dockerfile: Dockerfile
+    command: 'python consumer.py'
+    depends_on:
+      - main_db
+    networks:
+      - microservices_network
+
+  admin_db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: admin
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - admin_dbdata:/var/lib/mysql
+    ports:
+      - 33066:3306
+    networks:
+      - microservices_network
+
+  main_db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: main
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - main_dbdata:/var/lib/mysql
+    ports:
+      - 33067:3306
+    networks:
+      - microservices_network
+
+volumes:
+  admin_dbdata: 
+  main_dbdata:
+
+networks:
+  microservices_network:
+    driver: bridge

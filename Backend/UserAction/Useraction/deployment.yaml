@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: useraction-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: useraction-backend
+  template:
+    metadata:
+      labels:
+        app: useraction-backend
+    spec:
+      containers:
+        - name: useraction-backend
+          image: <your-dockerhub-username>/useraction-backend:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DATABASE_URL
+              value: "postgres://user:password@useraction-db-service:5432/useraction_db"
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: useraction-backend-service
+spec:
+  selector:
+    app: useraction-backend
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: useraction-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: useraction-db
+  template:
+    metadata:
+      labels:
+        app: useraction-db
+    spec:
+      containers:
+        - name: useraction-db
+          image: postgres:13
+          env:
+            - name: POSTGRES_DB
+              value: "useraction_db"
+            - name: POSTGRES_USER
+              value: "user"
+            - name: POSTGRES_PASSWORD
+              value: "password"
+          ports:
+            - containerPort: 5432
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: useraction-db-service
+spec:
+  selector:
+    app: useraction-db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  clusterIP: None  # Headless service for direct DB connection
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: useraction-queue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: useraction-queue
+  template:
+    metadata:
+      labels:
+        app: useraction-queue
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: useraction-queue-service
+spec:
+  selector:
+    app: useraction-queue
+  ports:
+    - protocol: TCP
+      port: 5672
+      targetPort: 5672
+    - protocol: TCP
+      port: 15672
+      targetPort: 15672
+  type: ClusterIP
